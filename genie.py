@@ -17,6 +17,12 @@ class Genie:
       ]
     }
 
+    sample_description = """
+    Setting : in a coffee shop
+    Time : day time
+    Character : A man with a black shirt and a child with a lollipop
+  """
+
     # initializing assistant
     self.assistant = self.client.beta.assistants.create(
     model="gpt-4o",
@@ -24,8 +30,9 @@ class Genie:
     instructions=f"""
       You are an expert illustrator. Your task is to generate images to supplement the story from given input text. 
       Make sure the description of the image is accurate and as specific as possible. Your description should also be family friendly.
-      It is important that each picture generated is consistent with the others. 
-      You have to output in valid JSON. The data schema should be as follows : {json.dumps(example_json)}.       
+      Make sure the image description has the same form as follows : {sample_description}
+      You have to output in valid JSON. The data schema should be as follows : {json.dumps(example_json)}.
+      Keep the caption returned in the JSON short      
     """,
     tools=[{
         "type": "function",
@@ -112,7 +119,7 @@ class EventHandler(AssistantEventHandler):
       )
       return dalle.data
     except:
-      return "https://img.freepik.com/free-vector/crossing-bones-skull-vector-logo_43623-1281.jpg?size=338&ext=jpg&ga=GA1.1.2113030492.1720137600&semt=sph"
+      return None
     
   def parser(self, images, descriptions):
     result = {}
