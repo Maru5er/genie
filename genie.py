@@ -8,10 +8,25 @@ class Genie:
     load_dotenv()
     self.client = OpenAI()
 
+    example_json = {
+      "images" : [
+        {
+          "image_url" : "https://sampleurl.com",
+          "description" : "sample description"
+        }
+      ]
+    }
+
     # initializing assistant
     self.assistant = self.client.beta.assistants.create(
     model="gpt-4o",
-    instructions="You are an expert illustrator. Your task is to generate images to supplement the story from given input text. Make sure the description of the image is accurate and as specific as possible. Your description should also be family friendly. It is important that each picture generated is consistent with the others. Limit to 2 images",
+    response_format={"type" : "json_object"},
+    instructions=f"""
+      You are an expert illustrator. Your task is to generate images to supplement the story from given input text. 
+      Make sure the description of the image is accurate and as specific as possible. Your description should also be family friendly.
+      It is important that each picture generated is consistent with the others. 
+      You have to output in valid JSON. The data schema should be as follows : {json.dumps(example_json)}         
+    """,
     tools=[{
         "type": "function",
         "function": {
@@ -27,12 +42,13 @@ class Genie:
               "style" : {
                 "type" : "string",
                 "description" : "The style of image to be generated"
-              }
+              },
             },
             "required": ["input", "style"]
           }
         }
-      },],
+      },
+      ],
     name="Illustrator",
   )
     
@@ -97,6 +113,15 @@ class EventHandler(AssistantEventHandler):
       return dalle.data
     except:
       return None
+    
+  def parser(self, images, descriptions):
+    result = {}
+    for i in range(len(images)):
+      result[i] = {
+        images[i] : descriptions[i]
+      }
+    json_obj = json.dumps(result)
+    return json_obj
 
   def handle_requires_action(self, data, run_id):
     tool_outputs = []

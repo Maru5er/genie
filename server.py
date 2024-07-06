@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, Response
 from genie import Genie
+import json
 
 # create flask app
 app = Flask(__name__)
@@ -27,7 +28,7 @@ def stream():
     data = request.get_json()
     input = data.get('story')
 
-    return Response(generate(input), mimetype='text/plain')
+    return Response(generate(input), mimetype='json')
 
 
 if __name__ == '__main__':
