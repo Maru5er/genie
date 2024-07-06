@@ -11,8 +11,8 @@ class Genie:
     example_json = {
       "images" : [
         {
-          "image_url" : "https://sampleurl.com",
-          "description" : "sample description"
+          "src" : "https://sampleurl.com",
+          "caption" : "sample description"
         }
       ]
     }
@@ -25,7 +25,7 @@ class Genie:
       You are an expert illustrator. Your task is to generate images to supplement the story from given input text. 
       Make sure the description of the image is accurate and as specific as possible. Your description should also be family friendly.
       It is important that each picture generated is consistent with the others. 
-      You have to output in valid JSON. The data schema should be as follows : {json.dumps(example_json)}         
+      You have to output in valid JSON. The data schema should be as follows : {json.dumps(example_json)}.       
     """,
     tools=[{
         "type": "function",
@@ -112,7 +112,7 @@ class EventHandler(AssistantEventHandler):
       )
       return dalle.data
     except:
-      return None
+      return "https://img.freepik.com/free-vector/crossing-bones-skull-vector-logo_43623-1281.jpg?size=338&ext=jpg&ga=GA1.1.2113030492.1720137600&semt=sph"
     
   def parser(self, images, descriptions):
     result = {}
@@ -136,7 +136,7 @@ class EventHandler(AssistantEventHandler):
           for image in images:
             tool_outputs.append({"tool_call_id": tool.id, "output": image.url})
         else :
-          tool_outputs.append({"tool_outputs" : tool.id, "output" : "error generating image"})
+          tool_outputs.append({"tool_outputs" : tool.id, "output" : "violation"})
       
     # Submit all tool_outputs at the same time
     self.submit_tool_outputs(tool_outputs, run_id)
