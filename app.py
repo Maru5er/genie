@@ -5,14 +5,20 @@ import json
 import os
 from dotenv import load_dotenv
 import requests
+load_dotenv()
 
 # create flask app
 app = Flask(__name__)
+
+env_config = os.getenv("PROD_APP_SETTINGS", "config.DevelopmentConfig")
+app.config.from_object(env_config)
+
+
 CORS(app, origins=["http://localhost:3000"], allow_headers=[
     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
     supports_credentials=True)
 genie = Genie()
-load_dotenv()
+
 SECRET_KEY = os.getenv("OPENAI_API_KEY")
 
 # on the terminal type: curl http://127.0.0.1:5000/ 
