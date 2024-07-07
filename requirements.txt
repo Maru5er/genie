@@ -18,8 +18,6 @@ charset-normalizer==2.1.1
 click==8.1.7
 colorama==0.4.6
 contourpy==1.1.1
-# Editable install with no version control (cse446utils==0.0.1)
--e c:\users\marco\documents\cse 446\hw0\hw0-a
 cvxopt==1.3.0
 cycler==0.12.1
 debugpy==1.6.3
