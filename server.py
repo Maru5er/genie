@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, Response
 from genie import Genie
 from flask_cors import CORS
 import json
+import os
+from dotenv import load_dotenv
 import requests
 
 # create flask app
@@ -10,6 +12,8 @@ CORS(app, origins=["http://localhost:3000"], allow_headers=[
     "Content-Type", "Authorization", "Access-Control-Allow-Credentials"],
     supports_credentials=True)
 genie = Genie()
+load_dotenv()
+SECRET_KEY = os.getenv("OPENAI_API_KEY")
 
 # on the terminal type: curl http://127.0.0.1:5000/ 
 # returns hello world when we use GET. 
@@ -53,7 +57,7 @@ def parse_audio():
         'respond_format': 'json'
     }
     headers = {
-        "Authorization" : 'Bearer sk-proj-kftqg2Uwc3hAC2AthjZpT3BlbkFJiX9t1el3eyi2EyltA6UZ'
+        "Authorization" : f'Bearer {SECRET_KEY}'
     }
     response = requests.post(api_url, files=files, data=data, headers=headers)
     return Response(response, mimetype='json')
