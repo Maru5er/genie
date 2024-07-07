@@ -114,8 +114,6 @@ class EventHandler(AssistantEventHandler):
     # since these will have our tool_calls
     if event.event == 'thread.run.requires_action':
       run_id = event.data.id  # Retrieve the run ID from the event data
-      for tool in event.data.required_action.submit_tool_outputs.tool_calls:
-        print(f"Image description : {tool.function.arguments}")
       self.handle_requires_action(event.data, run_id)
 
   # generate image based on input description and style
@@ -154,6 +152,10 @@ class EventHandler(AssistantEventHandler):
         style = arguments["style"]
         images = self.generate_images(prompt, style)
         if (images != None):
+          for image in images:
+            if image == None:
+              tool_outputs.append({"tool_outputs" : tool.id, "output" : "violation"})
+              break
           for image in images:
             tool_outputs.append({"tool_call_id": tool.id, "output": image.url})
         else :
