@@ -1,8 +1,6 @@
 from openai import OpenAI, AssistantEventHandler
 from dotenv import load_dotenv
 from typing_extensions import override
-from pydub import AudioSegment
-import io
 import json
 
 class Genie:
@@ -61,17 +59,6 @@ class Genie:
     name="Illustrator",
   )
     
-    
-  # parse audio
-  # output : transcription for the audio
-  def transcribe_audio(self, audio_file):
-    audio_bytes = audio_file.read()
-    audio = AudioSegment.from_file(io.BytesIO(audio_bytes), format="mp3")
-    #transcript = self.client.audio.translations.create(
-      #model="whisper-1",
-      #file=audio
-    #)
-    return "Hello"
 
 
     
