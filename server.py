@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, Response
 from genie import Genie
 from flask_cors import CORS
 import json
+import requests
 
 # create flask app
 app = Flask(__name__)
@@ -33,6 +34,29 @@ def generate(input):
             ]}
         return json.dumps(bad_request)
     return output
+
+@app.route('/parseAudio', methods=['POST'])
+def parse_audio():
+    default_value = "Unable to parse"
+    data = request.files['file']
+    if not data:
+        return jsonify({"error" : "No data provided"}), 400
+    
+    api_url = 'https://api.openai.com/v1/audio/transcriptions'
+
+    #response = {"error" : "data"}
+    files = {
+        'file' : ("temp.mp3", request.files['file'], 'audio/m4a'),
+    }
+    data = {
+        'model': 'whisper-1',
+        'respond_format': 'json'
+    }
+    headers = {
+        "Authorization" : 'Bearer sk-proj-kftqg2Uwc3hAC2AthjZpT3BlbkFJiX9t1el3eyi2EyltA6UZ'
+    }
+    response = requests.post(api_url, files=files, data=data, headers=headers)
+    return Response(response, mimetype='json')
 
 @app.route('/stream', methods=['POST'])
 def stream():
